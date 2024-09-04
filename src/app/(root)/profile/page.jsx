@@ -1,15 +1,18 @@
 import SignOutButton from "@/app/_components/auth/SignOutButton";
 import { auth } from "@/auth";
+import Link from "next/link";
 
 const ProfilePage = async () => {
   const session = await auth();
-  console.log(session);
 
   return (
     <div>
       {JSON.stringify(session)}
       <br />
       <SignOutButton />
+      <Link href={"/"} className="border p-2 rounded-md">
+        Home
+      </Link>
     </div>
   );
 };
