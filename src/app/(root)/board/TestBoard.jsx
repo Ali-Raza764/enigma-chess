@@ -1,6 +1,6 @@
 "use client";
 import { Chess } from "chess.js";
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import KnightLoading from "@/app/_components/loaders/KnightLoading";
 
 const ChessboardDnDProvider = dynamic(
@@ -13,7 +13,6 @@ const ChessboardDnDProvider = dynamic(
 import { playSound } from "./sounds";
 import dynamic from "next/dynamic";
 import { Chessboard } from "react-chessboard";
-import { FaChessKnight } from "react-icons/fa";
 
 // Helper function to generate all chess squares
 // todo use when the generateallpossiblemoves is working
