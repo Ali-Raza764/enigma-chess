@@ -12,6 +12,9 @@ export default async function Home() {
       <Link href={"/api/auth/signin"} className="border p-2 rounded-md">
         Signin
       </Link>
+      <Link href={"/puzzles"} className="border p-2 rounded-md">
+        Puzzles
+      </Link>
     </main>
   );
 }

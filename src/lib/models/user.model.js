@@ -8,8 +8,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "https://www.gravatar.com/avatar/50*50",
     },
-    rating: { type: String, default: 1000 },
-    puzzlesSolved: { type: String, default: 0 },
+    rating: { type: Number, default: 1000 },
+    puzzlesSolved: { type: Number, default: 0 },
+    lastPuzzleIndex: { type: Number, default: 0 },
     isVerified: { type: Boolean, default: false },
   },
   {

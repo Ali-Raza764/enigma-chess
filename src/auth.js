@@ -24,6 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.image = res.data.avatar;
           user.rating = res.data.rating;
           user.puzzlesSolved = res.data.puzzlesSolved;
+          user.lastPuzzleIndex = res.data.lastPuzzleIndex;
           return user;
         } catch (error) {
           console.log("some errror occured while singing in to databse");
@@ -44,6 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.avatar = user.avatar || user.image;
         token.rating = user.rating;
         token.puzzlesSolved = user.puzzlesSolved;
+        token.lastPuzzleIndex = user.lastPuzzleIndex;
       }
       return token;
     },
@@ -55,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.isVerified = token.isVerified;
       session.user.rating = token.rating;
       session.user.puzzlesSolved = token.puzzlesSolved;
+      session.user.lastPuzzleIndex = token.lastPuzzleIndex;
       return session;
     },
   },

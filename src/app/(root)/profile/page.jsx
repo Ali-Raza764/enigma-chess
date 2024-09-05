@@ -13,6 +13,9 @@ const ProfilePage = async () => {
       <Link href={"/"} className="border p-2 rounded-md">
         Home
       </Link>
+      <Link href={"/puzzles"} className="border p-2 rounded-md">
+        Puzzles
+      </Link>
     </div>
   );
 };
