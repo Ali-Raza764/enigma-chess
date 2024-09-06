@@ -5,7 +5,7 @@ import { signInOauth } from "@/actions/signin/signIn.action";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [Google],
   pages: {
-    // signIn: "/auth/sign-in",
+    signIn: "/signin",
   },
   callbacks: {
     async signIn({ user, account }) {
