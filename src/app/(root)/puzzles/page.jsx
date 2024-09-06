@@ -1,11 +1,13 @@
 import { auth } from "@/auth";
 import Puzzles from "./Puzzles";
 import User from "@/lib/models/user.model";
+import dbConnect from "@/lib/dbConnet";
 
 const PuzzlesPage = async () => {
   const session = await auth();
   // const { rating, lastPuzzleIndex } = session.user;
 
+  await dbConnect();
   const userData = await User.findOne({
     _id: session.user.id,
   }).lean();
@@ -21,7 +23,7 @@ const PuzzlesPage = async () => {
 
   const initialPuzzles = await res.json();
 
-  return <Puzzles initialPuzzles={initialPuzzles} userData={userData} />;
+  return <Puzzles initialPuzzles={initialPuzzles} userRating={rating}/>;
 };
 
 export default PuzzlesPage;

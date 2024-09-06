@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import dbConnect from "@/lib/dbConnet";
 import User from "@/lib/models/user.model";
 
 export const fetchUserPuzzles = async () => {
@@ -9,6 +10,7 @@ export const fetchUserPuzzles = async () => {
       throw new Error("Unauthorized");
     }
 
+    await dbConnect();
     const user = await User.findOne({ _id: session.user.id });
     if (!user) {
       throw new Error("User not found");

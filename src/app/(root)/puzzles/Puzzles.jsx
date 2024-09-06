@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FaExclamation } from "react-icons/fa";
 import { MdClose, MdQuestionMark } from "react-icons/md";
 
-const Puzzles = ({ initialPuzzles, userData }) => {
+const Puzzles = ({ initialPuzzles, userRating }) => {
   const [game, setGame] = useState(new Chess());
   const [puzzles, setPuzzles] = useState(initialPuzzles);
   const [currentPuzzle, setCurrentPuzzle] = useState(0);
@@ -23,6 +23,8 @@ const Puzzles = ({ initialPuzzles, userData }) => {
     message: "",
   });
   const [isPerfectSolve, setIsPerfectSolve] = useState(true);
+  const [rating, setRating] = useState(userRating);
+  const [mistakes, setMistakes] = useState(0);
 
   const Chooseside = useCallback(() => {
     if (puzzles[currentPuzzle]) {
@@ -103,14 +105,22 @@ const Puzzles = ({ initialPuzzles, userData }) => {
           }, 500);
         } else {
           setPuzzleEnd(true);
-          isPerfectSolve && updateDatabaseRating(15); //Only increase The rating if the user Has solved the puzzle correctly
+          if (isPerfectSolve) {
+            setRating((prev) => prev + 15);
+            updateDatabaseRating(15);
+          }
           setMessage("Puzzle completed!");
         }
         return true;
       }
 
       // Incorrect move handling
-      updateDatabaseRating(-20);
+      if (mistakes === 0) {
+        //We would only decrease the rating once in each puzzle
+        updateDatabaseRating(-20);
+        setRating((prev) => prev - 20);
+      }
+      setMistakes((prev) => prev + 1);
       setIsPerfectSolve(false);
       setError({
         status: true,
@@ -141,6 +151,7 @@ const Puzzles = ({ initialPuzzles, userData }) => {
       message: "",
     });
     setIsPerfectSolve(true);
+    setMistakes(0);
   }, []);
 
   const getHint = () => {
@@ -149,6 +160,7 @@ const Puzzles = ({ initialPuzzles, userData }) => {
     const from = move.slice(0, 2);
     const to = move.slice(2);
     setArrows([[from, to, "green"]]); // Add green arrow from the hint move
+    setIsPerfectSolve(false);
   };
 
   if (currentPuzzle === puzzles.length) {
@@ -173,6 +185,7 @@ const Puzzles = ({ initialPuzzles, userData }) => {
         allowMoveOpponentPieces={false}
       />
       <div className="w-full items-center justify-center flex flex-col space-y-4">
+        <div className="py-4 flex items-center gap-4">Rating : {rating}</div>
         {puzzleEnd ? (
           <div className="flex flex-col items-center space-y-4">
             <p className="text-lg font-semibold text-green-600 flex items-center">

@@ -1,5 +1,4 @@
 "use client";
-import { Chess } from "chess.js";
 import { useEffect, useRef, useState, useCallback } from "react";
 import KnightLoading from "@/app/_components/loaders/KnightLoading";
 

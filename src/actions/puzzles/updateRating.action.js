@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import dbConnect from "@/lib/dbConnet";
 import User from "@/lib/models/user.model";
 
 export const updateRating = async (payload) => {
@@ -22,6 +23,7 @@ export const updateRating = async (payload) => {
         message: "Incomplete Credentials",
       };
     }
+    await dbConnect();
 
     // Update user data
     const userData = await User.findOneAndUpdate(

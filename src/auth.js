@@ -29,8 +29,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         } catch (error) {
           console.log("some errror occured while singing in to databse");
         }
-        // user.rating = "test rating";
-        // user.puzzlesSolved = "1333";
       }
       // Default to allow sign-in
       return user;
