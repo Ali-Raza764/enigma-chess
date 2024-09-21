@@ -2,10 +2,12 @@ import { FaChessKing, FaSpinner } from "react-icons/fa";
 import NavBar from "./NavBar";
 import { Suspense } from "react";
 import UserButton from "./UserButton";
+import MobileNavBar from "./MobileNavBar";
 
 const Header = () => {
   return (
     <div className="w-full flex items-center justify-between p-3 border-b border-gray-600">
+      <MobileNavBar />
       {/* Logo Section */}
       <div className="flex items-center justify-center gap-3">
         <h3>Enigma Chess</h3>

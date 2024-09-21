@@ -3,6 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import SignInForm from "./SignInForm";
 import { FaChessBishop } from "react-icons/fa";
+import Link from "next/link";
 
 const SignInPage = async () => {
   const session = await auth();
@@ -16,16 +17,20 @@ const SignInPage = async () => {
         <h2 className="text-3xl font-bold mb-4">Welcome to Enigma Chess</h2>
         <p className="mb-4 text-lg">
           Enigma Chess is the ultimate platform for mastering your chess skills.
-          Whether you are a beginner or a seasoned player, we provide puzzles and
-          analysis to elevate your gameplay to the next level.
+          Whether you are a beginner or a seasoned player, we provide puzzles
+          and analysis to elevate your gameplay to the next level.
         </p>
         <p className="mb-6 text-gray-400">
           Join us today and start your journey toward becoming a chess
           grandmaster.
         </p>
+        <Link href="/">
+          <button className="mt-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-sans rounded-lg shadow-lg transition duration-200">
+            Return Home
+          </button>
+        </Link>
       </div>
 
-    
       <div className="md:w-1/2 md:p-6 flex flex-col items-center justify-center gap-6">
         <Image
           src={"/images/banner.webp"}

@@ -1,159 +1,57 @@
-"use client";
+"use client"
+import { useState } from "react";
+import Chessboard from "@/app/_components/Chessboard";
 import { Chess } from "chess.js";
-import { useEffect, useRef, useState, useCallback } from "react";
-import KnightLoading from "@/app/_components/loaders/KnightLoading";
+import handleMoveSounds from "@/lib/sounds/handleMoveSounds";
 
-const ChessboardDnDProvider = dynamic(
-  () => import("react-chessboard").then((mod) => mod.ChessboardDnDProvider),
-  {
-    ssr: false,
-    loading: () => <KnightLoading />,
-  }
-);
-import { playSound } from "./sounds";
-import dynamic from "next/dynamic";
-import { Chessboard } from "react-chessboard";
-
-// Helper function to generate all chess squares
-// todo use when the generateallpossiblemoves is working
-// const generateSquares = () => {
-//   const files = "abcdefgh";
-//   const ranks = "12345678";
-//   return files
-//     .split("")
-//     .flatMap((file) => ranks.split("").map((rank) => file + rank));
-// };
-
-const TestBoard = () => {
-  const [game, setGame] = useState(new Chess());
-  const [boardFen, setBoardFen] = useState(game.fen());
-  const [highlightedSquares, setHighlightedSquares] = useState({});
-  const [selectedPiece, setSelectedPiece] = useState(null);
-  const [boardWidth, setBoardWidth] = useState(500);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        const newBoardWidth = Math.min(containerWidth, 500);
-        setBoardWidth(newBoardWidth);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  // Memoize the calculation of all possible moves we calculate some moves ahead of time so that we can decrease latency
-  //todo make it calculate moves for both sides wjite and black
-  // const allPossibleMoves = useMemo(() => {
-  //   const moves = {};
-  //   const squares = generateSquares();
-  //   squares.forEach((square) => {
-  //     const piece = game.get(square);
-  //     if (piece) {
-  //       moves[square] = game.moves({ square, verbose: true });
-  //     }
-  //   });
-  //   return moves;
-  // }, [game]);
-
-  const handleDrop = useCallback(
-    (sourceSquare, targetSquare, piece) => {
-      try {
-        const move = game.move({
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: piece[1]?.toLowerCase() || "q",
-        });
-        setBoardFen(game.fen());
-        setHighlightedSquares({});
-        setSelectedPiece(null);
-
-        if (move.captured) {
-          playSound("capturePiece");
-        } else if (move.san.includes("+")) {
-          playSound("check");
-        } else if (game.isGameOver()) {
-          playSound("gameEnd");
-        } else if (move.san === "O-O" || move.san === "O-O-O") {
-          playSound("castle");
-        } else {
-          playSound("movePiece");
-        }
-
-        return true;
-      } catch (error) {
-        return false;
-      }
-    },
-    [game]
+function TestBoard() {
+  const [fen, setFen] = useState(
+    "rnbqkbnr/ppppppPp/8/8/8/8/PPPPP1PP/RNBQKBNR w KQkq - 0 1"
   );
+  // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 For initial position
+  const [chess] = useState(new Chess(fen));
+  // const { handleMoveSounds } = useChessSounds(chess);
+  const [customArrows, setCustomArrows] = useState([]);
 
-  const handlePieceClick = useCallback(
-    (piece, square) => {
-      const possibleMoves = game.moves({ square, verbose: true });
-      const targetSquares = possibleMoves.map((move) => move.to);
+  const handleMove = (move) => {
+    handleMoveSounds(move, chess);
+    // We can use somthing like this when the opponnent moves or when the game starts or you solve one move of the puzzle and the next move hTestBoardpens by itself
+    // setTimeout(() => {
+    //   try {
+    //     const move = chess.move({ from: "e7", to: "e5" });
+    //     handleMoveSounds(move);
+    //     setFen(chess.fen());
+    //   } catch (error) {}
+    // }, 1000);
+  };
 
-      const newHighlightedSquares = {};
-
-      targetSquares.forEach((targetSquare) => {
-        newHighlightedSquares[targetSquare] = {
-          backgroundSize: "50%",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundImage:
-            "radial-gradient(circle, rgba(0, 0, 0, 0.4) 31%, transparent 35%)",
-        };
-      });
-
-      setHighlightedSquares(newHighlightedSquares);
-      setSelectedPiece({ piece, square });
-    },
-    [game]
-  );
-
-  const handleSquareClick = useCallback(
-    (square) => {
-      if (selectedPiece && highlightedSquares[square]) {
-        handleDrop(selectedPiece.square, square, selectedPiece.piece);
-      }
-    },
-    [selectedPiece, highlightedSquares, handleDrop]
-  );
-
+  const showCustommArrows = () => {
+    setCustomArrows([
+      {
+        orig: "a2",
+        dest: "a6",
+        brush: "blue",
+        modifiers: {
+          lineWidth: "12",
+        },
+      },
+    ]);
+  };
   return (
-    <div ref={containerRef} className="w-full max-w-[800px] mx-auto">
-      <ChessboardDnDProvider>
-        <Chessboard
-          id={"Puzzles board"}
-          animationDuration={100}
-          position={game.fen()}
-          onPieceDrop={handleDrop}
-          onPieceClick={handlePieceClick}
-          onSquareClick={handleSquareClick}
-          boardWidth={boardWidth}
-          customBoardStyle={{
-            borderRadius: "4px",
-            boxShadow: "0 5px 15px rgba(0,0,0,0.5)",
-          }}
-          customSquareStyles={{
-            ...highlightedSquares,
-            ...(selectedPiece && {
-              [selectedPiece.square]: {
-                background: "rgba(255, 255, 0, 0.4)",
-              },
-            }),
-          }}
-          snapToCursor={false}
-        />
-      </ChessboardDnDProvider>
+    <div className="md:p-6">
+      <Chessboard
+        initialFen={fen}
+        chess={chess}
+        orientation="white"
+        onMove={handleMove}
+        allowMoveOpponentPieces={true}
+        customArrows={customArrows}
+      />
+      <button onClick={showCustommArrows} className="p-2 border rounded-md m-4">
+        Show Hints Arrows
+      </button>
     </div>
   );
-};
+}
 
 export default TestBoard;

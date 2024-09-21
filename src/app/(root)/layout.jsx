@@ -1,4 +1,6 @@
 import Header from "@/app/_components/shared/Header";
+import "./chess.css"
+import './theme.css'
 
 export const metadata = {
   title: "Enigma Chess",
