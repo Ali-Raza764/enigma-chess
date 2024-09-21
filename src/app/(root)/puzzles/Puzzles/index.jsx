@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Chess } from "chess.js";
-import Chessboard from "@/app/_components/ChessBoard";
+import ChessBoard from "@/app/_components/ChessBoard";
 import handleMoveSounds from "@/lib/sounds/handleMoveSounds";
 import { fetchUserPuzzles } from "@/actions/puzzles/fetchPuzzles.action";
 import { updateRating } from "@/actions/puzzles/updateRating.action";
@@ -181,7 +181,7 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
 
   return (
     <main className="md:p-6 flex items-center justify-between flex-col md:flex-row">
-      <Chessboard
+      <ChessBoard
         allowMoveOpponentPieces={true}
         chess={chess}
         customArrows={arrows}

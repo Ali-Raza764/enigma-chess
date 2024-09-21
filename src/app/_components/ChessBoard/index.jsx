@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Chessground as NativeChessground } from "chessground";
 import PromotionDialog from "./PromotionDialog";
 
-const Chessboard = ({
+const ChessBoard = ({
   initialFen,
   orientation,
   onMove,
@@ -187,4 +187,4 @@ const Chessboard = ({
   );
 };
 
-export default Chessboard;
+export default ChessBoard;

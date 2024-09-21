@@ -5,7 +5,7 @@ import User from "@/lib/models/user.model";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { userAgent } from "next/server";
+
 import {
   FaChessKing,
   FaUserCircle,
@@ -25,8 +25,6 @@ const ProfilePage = async () => {
   const userData = await User.findOne({
     _id: session.user.id,
   }).lean();
-  console.log(userData)
-
   
 
   return (
@@ -34,7 +32,7 @@ const ProfilePage = async () => {
       {/* Profile Section */}
       <div className="flex flex-col items-center mb-6">
         <Image
-          src={userData.user.image}
+          src={userData.user.avatar}
           alt="User profile picture"
           width={150}
           height={150}
