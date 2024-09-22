@@ -94,8 +94,8 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
         } else {
           setPuzzleEnd(true);
           setMessage("Puzzle completed!");
-          setRating((prev) => prev + 15);
           if (isPerfectSolve) {
+            setRating((prev) => prev + 15);
             updateDatabaseRating(15);
             updateSessionRating(15);
           }
@@ -108,7 +108,6 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
         //We would only decrease the rating once in each puzzle
         updateDatabaseRating(-20);
         updateSessionRating(-20);
-
         setRating((prev) => prev - 20);
       }
       setError("Incorrect move");
@@ -141,6 +140,7 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
     setFen(puzzles[nextPuzzleIndex].FEN);
     setMoveNumber(0);
     setPuzzleEnd(false);
+    setMessage("");
     setMessage("");
     setError(""); // Clear error
     setArrows([]); // Reset any arrows drawn on the board
