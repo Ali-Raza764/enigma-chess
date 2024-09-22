@@ -1,4 +1,4 @@
-import { playSound } from "@/app/_components/Board/sounds";
+import { playSound } from "./sounds";
 
 const handleMoveSounds = (move, chess) => {
   if (move.captured && !move.promotion && !chess.isGameOver()) {

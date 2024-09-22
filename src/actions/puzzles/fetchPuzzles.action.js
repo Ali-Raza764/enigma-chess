@@ -1,7 +1,5 @@
 "use server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/dbConnet";
-import User from "@/lib/models/user.model";
 
 export const fetchUserPuzzles = async () => {
   try {
@@ -10,16 +8,10 @@ export const fetchUserPuzzles = async () => {
       throw new Error("Unauthorized");
     }
 
-    await dbConnect();
-    const user = await User.findOne({ _id: session.user.id });
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     const res = await fetch(
       `https://chess-puzzles-api.vercel.app/puzzles?start=${
-        user.lastPuzzleIndex
-      }&limit=20&min_rating=${user.rating}&max_rating=${user.rating + 200}`
+        session.user.lastPuzzleIndex
+      }&limit=20&min_rating=${session.user.rating}&max_rating=${session.user.rating + 200}`
     );
     if (!res.ok) {
       throw new Error("Failed to fetch puzzles");
