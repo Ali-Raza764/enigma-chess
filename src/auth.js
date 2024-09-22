@@ -33,7 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Default to allow sign-in
       return user;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         const id = user._id?.toString() || user.id;
         token.id = id;
@@ -44,6 +44,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.rating = user.rating;
         token.puzzlesSolved = user.puzzlesSolved;
         token.lastPuzzleIndex = user.lastPuzzleIndex;
+      }
+
+      // Handle updates
+      if (trigger === "update" && session) {
+        token.rating = session.user.rating;
+        token.puzzlesSolved = session.user.puzzlesSolved;
+        token.lastPuzzleIndex = session.user.lastPuzzleIndex;
       }
       return token;
     },

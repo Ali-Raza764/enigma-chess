@@ -30,7 +30,7 @@ export const updateRating = async (payload) => {
       { _id: session.user.id },
       {
         $inc: {
-          rating: ratingChange, // Increment rating by 15
+          rating: ratingChange, // Increment rating by 15 or decrement
           lastPuzzleIndex: 1, // Increment lastPuzzleIndex by 1
           puzzlesSolved: 1, // Increment puzzlesSolved by 1
         },

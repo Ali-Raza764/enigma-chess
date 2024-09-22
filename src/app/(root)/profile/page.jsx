@@ -21,10 +21,13 @@ const ProfilePage = async () => {
     redirect("/");
   }
 
-  await dbConnect();
-  const userData = await User.findOne({
-    _id: session.user.id,
-  }).lean();
+  // await dbConnect();
+  // const userData = await User.findOne({
+  //   _id: session.user.id,
+  // }).lean();
+
+  // console.log(userData);
+  
   
 
   return (
@@ -32,31 +35,31 @@ const ProfilePage = async () => {
       {/* Profile Section */}
       <div className="flex flex-col items-center mb-6">
         <Image
-          src={userData.user.avatar}
+          src={session.user.image}
           alt="User profile picture"
           width={150}
           height={150}
           className="rounded-full"
         />
         <h1 className="text-4xl font-semibold mt-4 flex items-center">
-          <FaUserCircle className="mr-2" /> {userData.user.name}
+          <FaUserCircle className="mr-2" /> {session.user.name}
         </h1>
         <p className="text-gray-400 text-lg flex items-center mt-2">
-          <FaEnvelope className="mr-2" /> {userData.user.email}
+          <FaEnvelope className="mr-2" /> {session.user.email}
         </p>
         <p className="text-sm mt-1">
-          {userData.user.isVerified ? "Verified User" : "Unverified User"}
+          {session.user.isVerified ? "Verified User" : "Unverified User"}
         </p>
       </div>
 
       {/* Chess Stats Section */}
       <div className="text-center mb-8">
         <p className="text-2xl font-semibold flex items-center justify-center mb-2">
-          <FaChessKing className="mr-2" /> Chess Rating: {userData.user.rating}
+          <FaChessKing className="mr-2" /> Chess Rating: {session.user.rating}
         </p>
         <p className="text-xl flex items-center justify-center">
           <FaPuzzlePiece className="mr-2" /> Puzzles Solved:{" "}
-          {userData.user.puzzlesSolved}
+          {session.user.puzzlesSolved}
         </p>
       </div>
 

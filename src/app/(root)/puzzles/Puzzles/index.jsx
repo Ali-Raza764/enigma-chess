@@ -13,6 +13,7 @@ import {
   FaTimesCircle,
   FaUndoAlt,
 } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 
 const Puzzles = ({ initialPuzzles, userRating }) => {
   const [puzzles, setPuzzles] = useState(initialPuzzles);
@@ -28,6 +29,8 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
   const [isPerfectSolve, setIsPerfectSolve] = useState(true);
   const [rating, setRating] = useState(userRating);
   const [mistakes, setMistakes] = useState(0);
+
+  const { data: session, update } = useSession();
 
   useEffect(() => {
     if (!puzzles[currentPuzzle]) {
@@ -60,6 +63,18 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
     }
   };
 
+  const updateSessionRating = (change) => {
+    update({
+      ...session,
+      user: {
+        ...session.user,
+        rating: session.user.rating + change,
+        lastPuzzleIndex: session.user.lastPuzzleIndex + 1,
+        puzzlesSolved: session.user.puzzlesSolved + 1,
+      },
+    });
+  };
+
   const verifyMove = useCallback(
     (move) => {
       const moves = puzzles[currentPuzzle]?.Moves.split(" ") || [];
@@ -82,6 +97,7 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
           setRating((prev) => prev + 15);
           if (isPerfectSolve) {
             updateDatabaseRating(15);
+            updateSessionRating(15);
           }
         }
         return true;
@@ -91,6 +107,8 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
       if (mistakes === 0) {
         //We would only decrease the rating once in each puzzle
         updateDatabaseRating(-20);
+        updateSessionRating(-20);
+
         setRating((prev) => prev - 20);
       }
       setError("Incorrect move");
@@ -235,6 +253,7 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
           </div>
         )}
       </div>
+      {JSON.stringify(session?.user.rating)}
     </main>
   );
 };

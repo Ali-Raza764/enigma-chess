@@ -5,7 +5,7 @@ export async function middleware(req) {
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET,
-    // secureCookie: true,
+    secureCookie: true,
   });
 
   if (!token) {
