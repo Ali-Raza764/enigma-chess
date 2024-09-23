@@ -1,7 +1,19 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Chess } from "chess.js";
-import ChessBoard from "@/app/_components/ChessBoard";
+// import ChessBoard from "@/app/_components/ChessBoard";
+const ChessBoard = dynamic(() => import("@/app/_components/ChessBoard"), {
+  ssr: false,
+  loading: () => (
+    <Image
+      src="/backgrounds/brown.svg"
+      alt="loading"
+      height={600}
+      width={600}
+      className="w-full h-full"
+    />
+  ),
+});
 import handleMoveSounds from "@/lib/sounds/handleMoveSounds";
 import { fetchUserPuzzles } from "@/actions/puzzles/fetchPuzzles.action";
 import { updateRating } from "@/actions/puzzles/updateRating.action";
@@ -14,6 +26,9 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 import { useSession } from "next-auth/react";
+// import loading from "../../loading";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 
 const Puzzles = ({ initialPuzzles, userRating }) => {
   const [puzzles, setPuzzles] = useState(initialPuzzles);
@@ -98,6 +113,7 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
             setRating((prev) => prev + 15);
             updateDatabaseRating(15);
             updateSessionRating(15);
+            setRating((prev) => prev + 15);
           }
         }
         return true;
@@ -198,18 +214,20 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
   }
 
   return (
-    <main className="md:p-6 flex items-center justify-between flex-col md:flex-row">
-      <ChessBoard
-        allowMoveOpponentPieces={true}
-        chess={chess}
-        customArrows={arrows}
-        initialFen={fen}
-        onMove={handleMove}
-        orientation={
-          puzzles[currentPuzzle].FEN.split(" ")[1] === "w" ? "black" : "white"
-        }
-        key={`${fen}-${updateFlag}`} // Use updateFlag to force rerender when FEN changes
-      />
+    <main className="md:p-6 flex items-center justify-between flex-col md:flex-row w-full h-full">
+      <div className="w-full relative h-full md:w-1/2">
+        <ChessBoard
+          allowMoveOpponentPieces={true}
+          chess={chess}
+          customArrows={arrows}
+          initialFen={fen}
+          onMove={handleMove}
+          orientation={
+            puzzles[currentPuzzle].FEN.split(" ")[1] === "w" ? "black" : "white"
+          }
+          key={`${fen}-${updateFlag}`} // Use updateFlag to force rerender when FEN changes
+        />
+      </div>
 
       <div className="flex flex-col items-center justify-center w-full gap-4">
         {puzzleEnd ? (
@@ -253,7 +271,6 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
           </div>
         )}
       </div>
-      {JSON.stringify(session?.user.rating)}
     </main>
   );
 };
