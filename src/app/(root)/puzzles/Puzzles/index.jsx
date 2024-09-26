@@ -1,19 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Chess } from "chess.js";
-// import ChessBoard from "@/app/_components/ChessBoard";
-const ChessBoard = dynamic(() => import("@/app/_components/ChessBoard"), {
-  ssr: false,
-  loading: () => (
-    <Image
-      src="/backgrounds/brown.svg"
-      alt="loading"
-      height={600}
-      width={600}
-      className="w-full h-full"
-    />
-  ),
-});
+import ChessBoard from "@/app/_components/ChessBoard";
 import handleMoveSounds from "@/lib/sounds/handleMoveSounds";
 import { fetchUserPuzzles } from "@/actions/puzzles/fetchPuzzles.action";
 import { updateRating } from "@/actions/puzzles/updateRating.action";
@@ -26,9 +14,6 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 import { useSession } from "next-auth/react";
-// import loading from "../../loading";
-import Image from "next/image";
-import dynamic from "next/dynamic";
 
 const Puzzles = ({ initialPuzzles, userRating }) => {
   const [puzzles, setPuzzles] = useState(initialPuzzles);
@@ -245,17 +230,20 @@ const Puzzles = ({ initialPuzzles, userRating }) => {
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
               Your Rating: {rating} <FaChessQueen color="gold" size={32} />
             </h2>
-            <button
-              className="p-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md w-32 flex items-center justify-center"
-              onClick={getHint}
-            >
-              <FaLightbulb /> Hint
-            </button>
+
+            {!error && (
+              <button
+                className="p-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md w-max flex items-center justify-center gap-3"
+                onClick={getHint}
+              >
+                <FaLightbulb /> Hint
+              </button>
+            )}
             {error && (
-              <div>
+              <div className="flex items-center gap-3">
                 <FaTimesCircle color="red" size={24} />
                 <p className="text-red-500">{error}</p>
               </div>
